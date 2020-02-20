@@ -118,15 +118,19 @@
                              (set! arguments args)
                              (apply proc args))))
     (make-matcher
-     (lambda (subject)
-       (dynamic-wind
+	 (let ((counting-advice-id #f)
+		   (arguments-advice-id #f))
+	   (lambda (subject)
+		 (dynamic-wind
            (lambda ()
              (advise 'around procedure counting-advice)
              (advise 'around procedure arguments-advice))
            (lambda ()
              (force subject)
              (and (application-count-matcher applications) (argument-matcher arguments)))
-           (lambda () (unadvise procedure))))
+           (lambda ()
+			 (and counting-advice-id (unadvise procedure counting-advice-id))
+			 (and arguments-advice-id (unadvise procedure arguments-advice-id))))))
      (lambda (form subject negate)
        (receive (count-matched count-message) (application-count-matcher applications)
          (receive (arguments-matched argument-message) (argument-matcher arguments)
