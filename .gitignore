@@ -1,0 +1,6 @@
+behave
+*~
+*.c
+*.o
+*.so
+*.import.scm
