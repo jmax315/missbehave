@@ -1,0 +1,32 @@
+(define version "0.20")
+
+(compile -s -d0 -O3 missbehave.scm -j missbehave)
+(compile -s -d0 -O3 missbehave.import.scm)
+
+(compile -s -d0 -O3 missbehave-matchers.scm -j missbehave-matchers)
+(compile -s -d0 -O3 missbehave-matchers.import.scm)
+
+(compile -s -d0 -O3 missbehave-stubs.scm -j missbehave-stubs)
+(compile -s -d0 -O3 missbehave-stubs.import.scm)
+
+(install-extension
+  'missbehave
+  '("missbehave.import.so" "missbehave.so")
+  `((version ,version)))
+
+(install-extension
+  'missbehave-matchers
+  '("missbehave-matchers.import.so" "missbehave-matchers.so")
+  `((version ,version)))
+
+(install-extension
+  'missbehave-stubs
+  '("missbehave-stubs.import.so" "missbehave-stubs.so")
+  `((version ,version)))
+
+(compile -o behave -O2 -d1 -S behave.scm)
+
+(install-program
+ 'behave
+ '("behave")
+ `((version ,version)))
