@@ -61,7 +61,7 @@
      (call arguments +more-arguments ...))))
 
 (define-syntax call
-  (syntax-rules (once twice times time never with)
+  (syntax-rules (once twice times time never with with-args)
     ((_ proc (with arg arg+ ...))
      (make-call-matcher proc
                         (expect-at-least-n-applications (quote proc) 1)
@@ -90,7 +90,38 @@
      (make-call-matcher proc
                         (expect-exactly-n-applications (quote proc) n)
                         (match-arguments (quote proc) arg arg+ ...)))
-    ((_ proc never)
+
+    ((_ proc (with-args args))
+     (make-call-matcher proc
+                        (expect-at-least-n-applications (quote proc) 1)
+                        (apply match-arguments `(proc ,@args))))
+
+    ((_ proc (with-args args) once)
+     (make-call-matcher proc
+                        (expect-exactly-n-applications (quote proc) 1)
+                        (apply match-arguments `(proc ,@args))))
+
+    ((_ proc (with-args args) twice)
+     (make-call-matcher proc
+                        (expect-exactly-n-applications (quote proc) 2)
+                        (apply match-arguments `(proc ,@args))))
+
+    ((_ proc (with-arg args) never)
+     (make-call-matcher proc
+                        (expect-exactly-n-applications (quote proc) 0)
+                        (apply match-arguments `(proc ,@args))))
+
+    ((_ proc (with-args args) (n time))
+     (make-call-matcher proc
+                        (expect-exactly-n-applications (quote proc) n)
+                        (apply match-arguments `(proc ,@args))))
+
+    ((_ proc (with-arg args) (n times))
+     (make-call-matcher proc
+                        (expect-exactly-n-applications (quote proc) n)
+                        (apply match-arguments `(proc ,@args))))
+
+     ((_ proc never)
      (call proc (0 times)))
     ((_ proc once)
      (call proc (1 time)))
