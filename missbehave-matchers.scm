@@ -1,12 +1,12 @@
-;; 
+;;
 ;; %%HEADER%%
-;; 
+;;
 
 (module missbehave-matchers
 ( expect-at-least-n-applications
   expect-at-most-n-applications
   expect-exactly-n-applications
-  ignore-arguments 
+  ignore-arguments
   match-arguments
   make-call-matcher
   message-from-predicate-form
@@ -29,7 +29,7 @@
 ;; Procedure-Expections
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (define (format-times n)
-  (if (= n 1) "once" (sprintf "~A times" n))) 
+  (if (= n 1) "once" (sprintf "~A times" n)))
 
 (define ((expect-at-least-n-applications proc n) applications)
   (values
@@ -155,7 +155,7 @@
                    (unless (and  (irregex-match-valid-index? matches (car submatch))
                                  (equal? (irregex-match-substring matches (car submatch)) (cdr submatch)))
                      (set! mismatch submatch)
-                     
+
                      (return #f)))
                  with-matches)
                 #t)))
@@ -292,7 +292,7 @@
                    (item-amount (size collection)))
               (set! actual-amount item-amount)
               (compare item-amount expected-amount)))
-   
+
      (message (form subject negate)
               (if negate
                   (sprintf "Didn't expect ~A ~A" expected-amount procedure-or-sugar-name)
